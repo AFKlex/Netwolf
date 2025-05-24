@@ -1,7 +1,10 @@
 import requests 
 import socket
 import urllib3
+import argparse
 
+
+parser = argparse.ArgumentParser(description="Netwolf")
 
 def hostname_resolves(domain):
     try:
@@ -68,8 +71,25 @@ def build_domain_list(base_domain, subdomains):
 
 
 
+def define_arguments():
+    # Define Arguments Here
+	#--------------------------------------------
+	
+	parser.add_argument('-base_domain', type=str, required=True, help='Provide the base domain')
+	
+	
+	#--------------------------------------------
+	# Parse the command line arguments
+	args = parser.parse_args()
+	# Access the values of the arguments
+	return args
+
 
 if __name__ == '__main__':
+    args = define_arguments()
+    base_domain = args.base_domain
+
+
     print("Welcome to Netwolf") 
     
 
@@ -77,7 +97,7 @@ if __name__ == '__main__':
         subdomains = file.read().splitlines()
 
 
-    domain_list = build_domain_list("kaufbeuren.de", subdomains)
+    domain_list = build_domain_list(base_domain, subdomains)
         
     check_domains(domain_list)
 
