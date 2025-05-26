@@ -1,6 +1,7 @@
 import socket
 import requests
 import urllib3
+from src.WebReconGraph import *
 
 
 class Domain: 
@@ -13,6 +14,21 @@ class Domain:
         self.directories = []
         self.status_code = status_code
 
+    def __repr__(self) -> str:
+        return self.get_domain()
+
+    def __hash__(self) -> int:
+        return hash(self.get_domain())
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Domain):
+            return False
+        return self.domain == other.domain
+    
+    def get_domain(self) -> str:
+        return self.domain
+
+   
     def add_subdomain(self, domain:str, status_code:int) -> None:
         """
         Add the subdomain to the directory of valid subdomains
@@ -22,9 +38,6 @@ class Domain:
         self.subdomains.append(Domain(domain, status_code))
 
 
-
-    def get_domain(self) -> str:
-        return self.domain
 
     def resolve_hostname(self, domain) -> bool:
         try:
@@ -60,8 +73,8 @@ class Domain:
             print(f"\nChecking {subdomain}")
 
             if self.resolve_hostname(subdomain):
-                http_status = None 
-                https_status = None 
+                http_status = -1
+                https_status = -1
 
                 ## Check HTTP 
                 try: # I use "try" because sites that do not allow a redirect from http to https may throw a error" 
@@ -101,4 +114,12 @@ class Domain:
                 print(f"\t{subdomain} does not resolve")
 
 
+    def add_domains_to_graph(self, graph:WebReconGraph):
+        graph.add_node(self) # Add base domain object 
+
+        for entry in self.subdomains:
+            graph.add_node(entry) # Add all valid subdomains
+            graph.add_edge(self,entry) # Add base domain object and goal object 
+        
+        
 

@@ -2,6 +2,7 @@ import argparse
 from src.Directory import * 
 from src.Domain import * 
 from src.Files import * 
+from src.WebReconGraph import * 
 
 parser = argparse.ArgumentParser(description="Netwolf")
 
@@ -36,6 +37,10 @@ if __name__ == '__main__':
 
     print(base_domain.subdomains)
         
+    graph = WebReconGraph()
 
+    base_domain.add_domains_to_graph(graph)
+
+    graph.draw_graph()
 
 
