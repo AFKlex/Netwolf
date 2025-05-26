@@ -88,11 +88,11 @@ class Domain:
                 except: 
                     print(f"\t{subdomain} -> https -> possible")
 
-                if http_status != None: # If one connection succees add to subdomains 
+                if http_status != -1: # If one connection succees add to subdomains 
                     self.add_subdomain(subdomain,http_status)
                     continue
 
-                if https_status != None: 
+                if https_status != -1: 
                     self.add_subdomain(subdomain,https_status)
                     continue
                     
